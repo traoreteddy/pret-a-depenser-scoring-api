@@ -49,6 +49,7 @@ dev = [
     "pre-commit>=4",
     "types-psutil",
     "types-pyyaml>=6.0.12.20260906",
+    "httpx2>=2.13.1",
 ]
 analysis = [
     "evidently>=0.7",
