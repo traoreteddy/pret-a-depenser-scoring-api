@@ -76,6 +76,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/scoring_api"]
 
+[tool.hatch.build]
+include = ["src/scoring_api/**/*.py", "src/scoring_api/**/*.sql"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py313"
