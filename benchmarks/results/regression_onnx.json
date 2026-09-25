@@ -1,0 +1,10 @@
+{
+  "backend": "onnx",
+  "n": 5000,
+  "max_abs_diff": 8.940696716308594e-08,
+  "mean_abs_diff": 1.6747787594795228e-08,
+  "decision_flips": 0,
+  "tolerance": 0.0001,
+  "passed": true,
+  "batch_5000_ms": 72.4
+}
