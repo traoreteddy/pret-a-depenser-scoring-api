@@ -1,0 +1,114 @@
+{
+  "tag": "6_onnx_inline",
+  "note": "ONNX Runtime CPU (intra_op=1), inline",
+  "timestamp": "2026-09-25T08:14:00+00:00",
+  "url": "http://localhost:8000",
+  "model": {
+    "name": "scoring_credit",
+    "version": "1",
+    "backend": "onnx",
+    "threshold": 0.48000000000000004
+  },
+  "protocol": {
+    "n": 2000,
+    "warmup": 300,
+    "repeat": 2,
+    "seed": 42,
+    "payloads": "data/prod_sample.parquet (scénario normal)"
+  },
+  "host": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "chip": "Apple M2 Max",
+    "python": "3.13.13"
+  },
+  "levels": [
+    {
+      "concurrency": 1,
+      "procs": 1,
+      "n": 2000,
+      "errors": 0,
+      "rps": 502.1,
+      "client_ms": {
+        "p50": 1.68,
+        "p95": 3.09,
+        "p99": 4.61,
+        "max": 121.12
+      },
+      "server_ms": {
+        "p50": 0.44,
+        "p95": 0.97,
+        "p99": 1.89
+      },
+      "runs_p99_client": [
+        3.59,
+        4.61
+      ]
+    },
+    {
+      "concurrency": 8,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 1504.7,
+      "client_ms": {
+        "p50": 5.14,
+        "p95": 6.63,
+        "p99": 7.43,
+        "max": 14.96
+      },
+      "server_ms": {
+        "p50": 3.27,
+        "p95": 4.65,
+        "p99": 5.41
+      },
+      "runs_p99_client": [
+        7.32,
+        7.43
+      ]
+    },
+    {
+      "concurrency": 32,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 1500.0,
+      "client_ms": {
+        "p50": 19.84,
+        "p95": 30.02,
+        "p99": 41.54,
+        "max": 55.77
+      },
+      "server_ms": {
+        "p50": 14.15,
+        "p95": 20.26,
+        "p99": 31.56
+      },
+      "runs_p99_client": [
+        36.59,
+        41.54
+      ]
+    },
+    {
+      "concurrency": 64,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 1148.1,
+      "client_ms": {
+        "p50": 37.8,
+        "p95": 124.33,
+        "p99": 196.14,
+        "max": 318.82
+      },
+      "server_ms": {
+        "p50": 9.73,
+        "p95": 30.25,
+        "p99": 88.86
+      },
+      "runs_p99_client": [
+        92.23,
+        196.14
+      ]
+    }
+  ]
+}

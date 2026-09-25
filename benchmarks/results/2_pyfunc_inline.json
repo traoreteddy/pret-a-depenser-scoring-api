@@ -1,0 +1,114 @@
+{
+  "tag": "2_pyfunc_inline",
+  "note": "pyfunc MLflow, exécution inline",
+  "timestamp": "2026-09-25T08:11:40+00:00",
+  "url": "http://localhost:8000",
+  "model": {
+    "name": "scoring_credit",
+    "version": "1",
+    "backend": "pyfunc",
+    "threshold": 0.48000000000000004
+  },
+  "protocol": {
+    "n": 2000,
+    "warmup": 300,
+    "repeat": 2,
+    "seed": 42,
+    "payloads": "data/prod_sample.parquet (scénario normal)"
+  },
+  "host": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "chip": "Apple M2 Max",
+    "python": "3.13.13"
+  },
+  "levels": [
+    {
+      "concurrency": 1,
+      "procs": 1,
+      "n": 2000,
+      "errors": 0,
+      "rps": 134.4,
+      "client_ms": {
+        "p50": 7.25,
+        "p95": 8.75,
+        "p99": 10.25,
+        "max": 24.28
+      },
+      "server_ms": {
+        "p50": 4.93,
+        "p95": 5.84,
+        "p99": 7.2
+      },
+      "runs_p99_client": [
+        9.99,
+        10.25
+      ]
+    },
+    {
+      "concurrency": 8,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 184.9,
+      "client_ms": {
+        "p50": 42.13,
+        "p95": 55.68,
+        "p99": 66.41,
+        "max": 87.42
+      },
+      "server_ms": {
+        "p50": 31.17,
+        "p95": 41.49,
+        "p99": 47.12
+      },
+      "runs_p99_client": [
+        63.57,
+        66.41
+      ]
+    },
+    {
+      "concurrency": 32,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 184.2,
+      "client_ms": {
+        "p50": 162.59,
+        "p95": 222.8,
+        "p99": 471.74,
+        "max": 535.19
+      },
+      "server_ms": {
+        "p50": 115.38,
+        "p95": 161.85,
+        "p99": 324.2
+      },
+      "runs_p99_client": [
+        228.6,
+        471.74
+      ]
+    },
+    {
+      "concurrency": 64,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 192.8,
+      "client_ms": {
+        "p50": 324.75,
+        "p95": 380.63,
+        "p99": 415.01,
+        "max": 453.6
+      },
+      "server_ms": {
+        "p50": 248.34,
+        "p95": 298.75,
+        "p99": 333.88
+      },
+      "runs_p99_client": [
+        394.76,
+        415.01
+      ]
+    }
+  ]
+}

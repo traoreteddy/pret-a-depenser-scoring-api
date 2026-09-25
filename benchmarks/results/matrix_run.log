@@ -1,0 +1,58 @@
+=== 1_pyfunc_baseline (AVANT : pyfunc MLflow (DataFrame + sklearn, XGB n_jobs=-1), endpoint dans le pool de threads, 1 worker) ===
+c=  1  rps=  133.9  client p50/p95/p99 = 7.24/8.95/10.8 ms  server p99 = 7.96 ms  err=0
+c=  8  rps=  145.4  client p50/p95/p99 = 54.73/73.3/99.13 ms  server p99 = 87.46 ms  err=0
+c= 32  rps=  144.4  client p50/p95/p99 = 220.37/280.47/314.84 ms  server p99 = 281.25 ms  err=0
+c= 64  rps=  145.3  client p50/p95/p99 = 432.89/546.51/619.04 ms  server p99 = 572.05 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 1_pyfunc_baseline | 7.24 / 10.8 | 54.73 / 99.13 | 220.37 / 314.84 | 432.89 / 619.04 | 7.96 / 87.46 / 281.25 / 572.05 |
+=== 2_pyfunc_inline (pyfunc MLflow, exécution inline) ===
+c=  1  rps=  134.4  client p50/p95/p99 = 7.25/8.75/10.25 ms  server p99 = 7.2 ms  err=0
+c=  8  rps=  184.9  client p50/p95/p99 = 42.13/55.68/66.41 ms  server p99 = 47.12 ms  err=0
+c= 32  rps=  184.2  client p50/p95/p99 = 162.59/222.8/471.74 ms  server p99 = 324.2 ms  err=0
+c= 64  rps=  192.8  client p50/p95/p99 = 324.75/380.63/415.01 ms  server p99 = 333.88 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 2_pyfunc_inline | 7.25 / 10.25 | 42.13 / 66.41 | 162.59 / 471.74 | 324.75 / 415.01 | 7.2 / 47.12 / 324.2 / 333.88 |
+=== 3_xgb_native_threadpool (Booster natif (inplace_predict, nthread=1), pool de threads) ===
+c=  1  rps=  441.4  client p50/p95/p99 = 2.07/3.32/4.33 ms  server p99 = 2.02 ms  err=0
+c=  8  rps= 1149.9  client p50/p95/p99 = 6.84/9.1/10.11 ms  server p99 = 8.12 ms  err=0
+c= 32  rps= 1407.5  client p50/p95/p99 = 22.08/27.04/31.64 ms  server p99 = 23.7 ms  err=0
+c= 64  rps= 1412.7  client p50/p95/p99 = 43.21/55.51/81.07 ms  server p99 = 71.04 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 3_xgb_native_threadpool | 2.07 / 4.33 | 6.84 / 10.11 | 22.08 / 31.64 | 43.21 / 81.07 | 2.02 / 8.12 / 23.7 / 71.04 |
+=== 4_xgb_native_inline (APRÈS : Booster natif, nthread=1, exécution inline, 1 worker) ===
+c=  1  rps=  479.4  client p50/p95/p99 = 1.95/2.91/3.88 ms  server p99 = 1.5 ms  err=0
+c=  8  rps= 1319.7  client p50/p95/p99 = 5.93/7.36/8.13 ms  server p99 = 5.97 ms  err=0
+c= 32  rps= 1515.6  client p50/p95/p99 = 19.87/23.43/76.55 ms  server p99 = 19.07 ms  err=0
+c= 64  rps= 1559.4  client p50/p95/p99 = 38.87/49.77/74.94 ms  server p99 = 65.12 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 4_xgb_native_inline | 1.95 / 3.88 | 5.93 / 8.13 | 19.87 / 76.55 | 38.87 / 74.94 | 1.5 / 5.97 / 19.07 / 65.12 |
+=== 5_xgb_native_inline_tall (Booster natif, nthread=-1 (tous les cœurs), inline) ===
+c=  1  rps=  490.6  client p50/p95/p99 = 1.89/2.92/3.81 ms  server p99 = 1.44 ms  err=0
+c=  8  rps= 1298.3  client p50/p95/p99 = 5.97/7.56/8.55 ms  server p99 = 6.12 ms  err=0
+c= 32  rps= 1530.7  client p50/p95/p99 = 19.93/23.5/59.01 ms  server p99 = 51.25 ms  err=0
+c= 64  rps= 1567.5  client p50/p95/p99 = 39.45/44.5/54.43 ms  server p99 = 35.19 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 5_xgb_native_inline_tall | 1.89 / 3.81 | 5.97 / 8.55 | 19.93 / 59.01 | 39.45 / 54.43 | 1.44 / 6.12 / 51.25 / 35.19 |
+=== 6_onnx_inline (ONNX Runtime CPU (intra_op=1), inline) ===
+c=  1  rps=  502.1  client p50/p95/p99 = 1.68/3.09/4.61 ms  server p99 = 1.89 ms  err=0
+c=  8  rps= 1504.7  client p50/p95/p99 = 5.14/6.63/7.43 ms  server p99 = 5.41 ms  err=0
+c= 32  rps= 1500.0  client p50/p95/p99 = 19.84/30.02/41.54 ms  server p99 = 31.56 ms  err=0
+c= 64  rps= 1148.1  client p50/p95/p99 = 37.8/124.33/196.14 ms  server p99 = 88.86 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 6_onnx_inline | 1.68 / 4.61 | 5.14 / 7.43 | 19.84 / 41.54 | 37.8 / 196.14 | 1.89 / 5.41 / 31.56 / 88.86 |
+=== 7_xgb_native_inline_w2 (Booster natif, inline, 2 workers uvicorn) ===
+c=  1  rps=  504.0  client p50/p95/p99 = 1.87/2.93/3.64 ms  server p99 = 1.44 ms  err=0
+c=  8  rps= 1614.1  client p50/p95/p99 = 4.12/10.96/18.04 ms  server p99 = 14.15 ms  err=0
+c= 32  rps= 1832.2  client p50/p95/p99 = 14.54/31.22/38.67 ms  server p99 = 28.99 ms  err=0
+c= 64  rps= 1196.0  client p50/p95/p99 = 40.99/117.93/171.96 ms  server p99 = 7.41 ms  err=0
+
+markdown (client p50 / p99 par concurrence ; serveur p99) :
+| 7_xgb_native_inline_w2 | 1.87 / 3.64 | 4.12 / 18.04 | 14.54 / 38.67 | 40.99 / 171.96 | 1.44 / 14.15 / 28.99 / 7.41 |
+matrice terminée
+exit 0

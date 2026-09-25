@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import multiprocessing as mp
 import platform
 import subprocess
 import sys
@@ -27,9 +28,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from simulation.simulate_traffic import build_payloads
 
 
-async def run_level(
+async def _worker(
     url: str, payloads: list[tuple[str, dict[str, Any]]], concurrency: int, warmup: int
-) -> dict[str, Any]:
+) -> tuple[list[float], list[float], int, float]:
+    """Un processus client : `concurrency` connexions keep-alive, mesure aller-retour et serveur."""
     limits = httpx.Limits(max_connections=concurrency, max_keepalive_connections=concurrency)
     client_ms: list[float] = []
     server_ms: list[float] = []
@@ -58,11 +60,39 @@ async def run_level(
         t0 = time.perf_counter()
         await asyncio.gather(*(one(b, True) for _, b in payloads))
         elapsed = time.perf_counter() - t0
+    return client_ms, server_ms, errors, elapsed
+
+
+def _worker_entry(
+    args: tuple[str, list[tuple[str, dict[str, Any]]], int, int],
+) -> tuple[list[float], list[float], int, float]:
+    return asyncio.run(_worker(*args))
+
+
+def run_level(
+    url: str, payloads: list[tuple[str, dict[str, Any]]], concurrency: int, warmup: int, procs: int
+) -> dict[str, Any]:
+    """Répartit la charge sur `procs` processus clients pour que le générateur ne soit pas le goulot
+    (un seul processus Python sature vers 1 000 req/s et fausse le p99 au-delà de 8 connexions)."""
+    procs = max(1, min(procs, concurrency))
+    per_proc = max(1, concurrency // procs)
+    chunks = [payloads[i::procs] for i in range(procs)]
+    jobs = [(url, chunk, per_proc, max(1, warmup // procs)) for chunk in chunks]
+    if procs == 1:
+        results = [_worker_entry(jobs[0])]
+    else:
+        with mp.get_context("spawn").Pool(procs) as pool:
+            results = pool.map(_worker_entry, jobs)
+    client_ms = [v for r in results for v in r[0]]
+    server_ms = [v for r in results for v in r[1]]
+    errors = sum(r[2] for r in results)
+    elapsed = max(r[3] for r in results)
     c = np.array(client_ms)
     s = np.array(server_ms)
     q = lambda a, p: round(float(np.percentile(a, p)), 2) if len(a) else None  # noqa: E731
     return {
         "concurrency": concurrency,
+        "procs": procs,
         "n": len(payloads),
         "errors": errors,
         "rps": round(len(payloads) / elapsed, 1),
@@ -95,6 +125,9 @@ def main() -> int:
         "--repeat", type=int, default=3, help="répétitions par niveau (médiane du p99 retenue)"
     )
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--procs", type=int, default=4, help="processus clients (répartition de la concurrence)"
+    )
     parser.add_argument("--out", type=Path, default=Path("benchmarks/results"))
     parser.add_argument("--note", default="")
     args = parser.parse_args()
@@ -103,7 +136,7 @@ def main() -> int:
     levels = []
     for c in args.concurrency:
         runs = [
-            asyncio.run(run_level(args.url, payloads, c, args.warmup)) for _ in range(args.repeat)
+            run_level(args.url, payloads, c, args.warmup, args.procs) for _ in range(args.repeat)
         ]
         runs.sort(key=lambda r: r["client_ms"]["p99"] or 0)
         median = runs[len(runs) // 2]

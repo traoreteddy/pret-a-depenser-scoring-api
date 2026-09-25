@@ -1,0 +1,114 @@
+{
+  "tag": "7_xgb_native_inline_w2",
+  "note": "Booster natif, inline, 2 workers uvicorn",
+  "timestamp": "2026-09-25T08:14:34+00:00",
+  "url": "http://localhost:8000",
+  "model": {
+    "name": "scoring_credit",
+    "version": "1",
+    "backend": "xgb_native",
+    "threshold": 0.48000000000000004
+  },
+  "protocol": {
+    "n": 2000,
+    "warmup": 300,
+    "repeat": 2,
+    "seed": 42,
+    "payloads": "data/prod_sample.parquet (scénario normal)"
+  },
+  "host": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "chip": "Apple M2 Max",
+    "python": "3.13.13"
+  },
+  "levels": [
+    {
+      "concurrency": 1,
+      "procs": 1,
+      "n": 2000,
+      "errors": 0,
+      "rps": 504.0,
+      "client_ms": {
+        "p50": 1.87,
+        "p95": 2.93,
+        "p99": 3.64,
+        "max": 11.72
+      },
+      "server_ms": {
+        "p50": 0.53,
+        "p95": 0.93,
+        "p99": 1.44
+      },
+      "runs_p99_client": [
+        3.45,
+        3.64
+      ]
+    },
+    {
+      "concurrency": 8,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 1614.1,
+      "client_ms": {
+        "p50": 4.12,
+        "p95": 10.96,
+        "p99": 18.04,
+        "max": 32.56
+      },
+      "server_ms": {
+        "p50": 2.21,
+        "p95": 4.65,
+        "p99": 14.15
+      },
+      "runs_p99_client": [
+        11.1,
+        18.04
+      ]
+    },
+    {
+      "concurrency": 32,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 1832.2,
+      "client_ms": {
+        "p50": 14.54,
+        "p95": 31.22,
+        "p99": 38.67,
+        "max": 49.94
+      },
+      "server_ms": {
+        "p50": 9.42,
+        "p95": 24.0,
+        "p99": 28.99
+      },
+      "runs_p99_client": [
+        34.08,
+        38.67
+      ]
+    },
+    {
+      "concurrency": 64,
+      "procs": 4,
+      "n": 2000,
+      "errors": 0,
+      "rps": 1196.0,
+      "client_ms": {
+        "p50": 40.99,
+        "p95": 117.93,
+        "p99": 171.96,
+        "max": 369.24
+      },
+      "server_ms": {
+        "p50": 3.03,
+        "p95": 5.35,
+        "p99": 7.41
+      },
+      "runs_p99_client": [
+        110.34,
+        171.96
+      ]
+    }
+  ]
+}
