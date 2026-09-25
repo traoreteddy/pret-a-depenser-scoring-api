@@ -27,7 +27,7 @@ htmlcov/
 
 # Profils, rapports générés et données brutes
 profiles/
-docs/reports/*.html
+docs/reports/
 data/*.csv
 data/raw/
 simulation/results/
@@ -37,3 +37,6 @@ models/**/*.onnx.tmp
 
 # Mémo personnel (brief local)
 memo.txt*
+
+# Artefacts temporaires du navigateur (captures automatisées)
+.playwright-mcp/

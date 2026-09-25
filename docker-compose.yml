@@ -1,5 +1,5 @@
 # Stack locale : API de scoring, stockage des données de production (PostgreSQL + pgAdmin),
-# monitoring technique (Prometheus + Grafana). Le dashboard Streamlit est ajouté ensuite.
+# monitoring technique (Prometheus + Grafana) et dashboard Streamlit (profil dashboard).
 name: pret-a-depenser
 
 x-postgres-env: &postgres-env
@@ -106,6 +106,20 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: scoring-dashboard
+    profiles: ["dashboard"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scoring}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-scoring_prod}
+    ports:
+      - "${DASHBOARD_PORT:-8501}:8501"
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:
