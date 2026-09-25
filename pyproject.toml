@@ -1,6 +1,6 @@
 [project]
 name = "scoring-api"
-version = "0.1.0"
+version = "1.0.0"
 description = "API de scoring crédit « Prêt à Dépenser » : déploiement, monitoring et optimisation du modèle (OpenClassrooms P8)"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"

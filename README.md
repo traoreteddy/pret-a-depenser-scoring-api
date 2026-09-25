@@ -213,7 +213,16 @@ sur `request_id`), **toujours** en zone grise `|proba − seuil| < 0,05` et pour
 d'entrées. Pas de donnée personnelle directe (RGPD) ; purge/partitionnement mensuel par `ts`
 en perspective.
 
-Captures : `docs/screenshots/` (pgAdmin, Grafana, Streamlit). Requête utile :
+Captures d'écran de la solution de stockage et du monitoring (`docs/screenshots/`) :
+
+| Capture | Contenu |
+|---|---|
+| `pgadmin_predictions.png` | table `predictions` : scores, décisions, latences, entrées JSONB (`raw_input`, `features`), `client_ref`, `scenario` |
+| `pgadmin_par_scenario.png` | agrégats par scénario (volume, entrées complètes, score moyen, taux de refus, p99, labels) |
+| `grafana_dashboard.png` | dashboard technique (RPS, p50/p95/p99 vs SLO, refus, heatmap des scores, journalisation) |
+| `streamlit_*.png` | pages Métier, Dérive (dont scénario `drift_ext_source`), Performance, Seuil, Technique |
+
+Requête utile :
 
 ```sql
 SELECT scenario, count(*), round(avg(proba_defaut)::numeric, 3) AS score_moyen,
