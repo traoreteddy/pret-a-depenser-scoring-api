@@ -61,9 +61,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         yield
     finally:
         metrics.app_ready.set(0)
-        plogger = getattr(app.state, "prediction_logger", None)
-        if plogger is not None:
-            await plogger.stop()
+        running = getattr(app.state, "prediction_logger", None)
+        if running is not None:
+            await running.stop()
         log.info("shutdown")
 
 
