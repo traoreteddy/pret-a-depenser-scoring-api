@@ -43,7 +43,7 @@ typecheck: ## Mypy sur src/
 test: ## Tests rapides (sans slow/integration) avec couverture
 	uv run pytest -m "not slow and not integration" --cov --cov-report=term-missing --cov-report=xml
 
-test-all: ## Tous les tests (modèle réel + PostgreSQL)
+test-all: ## Tous les tests (modèle réel + PostgreSQL de test : DATABASE_URL doit viser une base *_test)
 	uv run pytest --cov --cov-report=term-missing
 
 cov: ## Rapport de couverture HTML

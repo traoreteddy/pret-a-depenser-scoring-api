@@ -23,6 +23,9 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 def db_client() -> Iterator[TestClient]:
     if not DATABASE_URL:
         pytest.skip("DATABASE_URL non défini")
+    if "test" not in DATABASE_URL.rsplit("/", 1)[-1]:
+        # Garde-fou : le fixture supprime les tables, il ne doit jamais viser une base de production.
+        pytest.skip("DATABASE_URL doit pointer vers une base dont le nom contient « test »")
     with psycopg.connect(DATABASE_URL) as conn:
         conn.execute("DROP TABLE IF EXISTS prediction_labels, api_errors, predictions CASCADE")
         conn.commit()
