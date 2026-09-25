@@ -1,0 +1,34 @@
+# Stack locale : API de scoring (les services de stockage et de monitoring sont ajoutés
+# dans les phases suivantes : db, pgadmin, prometheus, grafana, dashboard).
+name: pret-a-depenser
+
+services:
+  api:
+    image: ${IMAGE:-scoring-api:local}
+    build:
+      context: .
+      args:
+        INSTALL_EXTRAS: ${INSTALL_EXTRAS:-pyfunc}
+    container_name: scoring-api
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: prod
+      LOG_FORMAT: json
+      MODEL_BACKEND: ${MODEL_BACKEND:-pyfunc}
+      DB_ENABLED: ${DB_ENABLED:-false}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health/ready"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2g
