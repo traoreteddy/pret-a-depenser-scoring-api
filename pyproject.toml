@@ -17,6 +17,7 @@ dependencies = [
     "psycopg[binary,pool]>=3.2",
     "numpy==2.5.3",
     "xgboost==3.4.1",
+    "pyyaml>=6.0.3",
 ]
 
 [project.optional-dependencies]
@@ -47,6 +48,7 @@ dev = [
     "mypy>=1.13",
     "pre-commit>=4",
     "types-psutil",
+    "types-pyyaml>=6.0.12.20260906",
 ]
 analysis = [
     "evidently>=0.7",

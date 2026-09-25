@@ -1,0 +1,61 @@
+artifact_path: /Users/DBS_SA/Documents/COURS/Openclassroom/P6/mlruns/1/models/m-876583d78837477283a8ea1409b48509/artifacts
+flavors:
+  python_function:
+    cloudpickle_version: 3.1.2
+    code: null
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pyfunc.model
+    python_model: python_model.pkl
+    python_version: 3.13.13
+    streamable: false
+is_signature_from_type_hint: false
+mlflow_version: 3.16.1
+model_id: m-876583d78837477283a8ea1409b48509
+model_size_bytes: 1603119
+model_uuid: m-876583d78837477283a8ea1409b48509
+prompts: null
+run_id: 4cad9144dbab477eb596f13c49cd53bf
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "EXT_SOURCE_MEAN", "required": true}, {"type":
+    "double", "name": "EXT_SOURCE_MIN", "required": true}, {"type": "double", "name":
+    "EXT_SOURCE_3", "required": true}, {"type": "double", "name": "EXT_SOURCE_2",
+    "required": true}, {"type": "double", "name": "CREDIT_ANNUITY_RATIO", "required":
+    true}, {"type": "double", "name": "AMT_ANNUITY", "required": true}, {"type": "double",
+    "name": "EXT_SOURCE_1", "required": false}, {"type": "double", "name": "AMT_GOODS_PRICE",
+    "required": true}, {"type": "double", "name": "INST_LATE_RATIO", "required": false},
+    {"type": "double", "name": "CREDIT_GOODS_RATIO", "required": true}, {"type": "double",
+    "name": "INST_AMT_PAYMENT_SUM", "required": false}, {"type": "double", "name":
+    "PREV_CREDIT_APP_RATIO_MEAN", "required": true}, {"type": "double", "name": "CC_UTIL_MAX",
+    "required": false}, {"type": "double", "name": "BUREAU_ACTIVE_RATIO", "required":
+    true}, {"type": "double", "name": "POS_INSTALMENT_FUTURE_MEAN", "required": false},
+    {"type": "double", "name": "PREV_REFUSED_RATIO", "required": true}, {"type": "double",
+    "name": "CC_UTIL_MEAN", "required": false}, {"type": "long", "name": "DAYS_ID_PUBLISH",
+    "required": true}, {"type": "double", "name": "BUREAU_DAYS_CREDIT_MIN", "required":
+    true}, {"type": "double", "name": "AGE_ANNEES", "required": true}, {"type": "double",
+    "name": "BUREAU_DAYS_CREDIT_MAX", "required": true}, {"type": "long", "name":
+    "EXT_SOURCE_NB_NAN", "required": true}, {"type": "double", "name": "PREV_AMT_CREDIT_MAX",
+    "required": true}, {"type": "long", "name": "FLAG_DOCUMENT_3", "required": true},
+    {"type": "double", "name": "PREV_APPROVED_RATIO", "required": true}, {"type":
+    "double", "name": "OWN_CAR_AGE", "required": false}, {"type": "double", "name":
+    "INST_COUNT", "required": true}, {"type": "double", "name": "PREV_AMT_CREDIT_MEAN",
+    "required": true}, {"type": "double", "name": "FLOORSMAX_AVG", "required": false},
+    {"type": "double", "name": "DAYS_LAST_PHONE_CHANGE", "required": true}, {"type":
+    "double", "name": "EXT_SOURCE_STD", "required": true}, {"type": "long", "name":
+    "FLAG_EMP_PHONE", "required": true}, {"type": "double", "name": "PREV_CNT_PAYMENT_MEAN",
+    "required": true}, {"type": "double", "name": "PREV_COUNT", "required": true},
+    {"type": "double", "name": "ID_PUBLISH_AGE_RATIO", "required": true}, {"type":
+    "double", "name": "ELEVATORS_AVG", "required": false}, {"type": "double", "name":
+    "LIVINGAREA_AVG", "required": false}, {"type": "double", "name": "PREV_AMT_ANNUITY_MEAN",
+    "required": true}]'
+  outputs: '[{"type": "float", "name": "proba_defaut", "required": true}, {"type":
+    "string", "name": "decision", "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-09-25 03:58:07.080683'
