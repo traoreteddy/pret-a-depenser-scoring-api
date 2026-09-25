@@ -143,9 +143,11 @@ jobs:
           DATABASE_URL=postgresql://scoring:${{ secrets.POSTGRES_PASSWORD || 'ci_password' }}@db:5432/scoring_prod
           DB_ENABLED=${{ vars.DEPLOY_DB_ENABLED || 'false' }}
           MODEL_BACKEND=${{ vars.MODEL_BACKEND || 'xgb_native' }}
+          GRAFANA_ADMIN_PASSWORD=${{ secrets.GRAFANA_ADMIN_PASSWORD || 'ci_password' }}
+          PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD || 'ci_password' }}
           EOT
       - name: Déploiement
-        run: docker compose pull api && docker compose up -d --no-build
+        run: docker compose pull api && docker compose up -d --no-build db api
       - name: Test de fumée
         run: bash scripts/smoke_test.sh http://localhost:8000 120
       - name: Logs API (en cas d'échec)
