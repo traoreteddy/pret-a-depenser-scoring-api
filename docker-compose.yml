@@ -1,6 +1,11 @@
-# Stack locale : API de scoring (les services de stockage et de monitoring sont ajoutés
-# dans les phases suivantes : db, pgadmin, prometheus, grafana, dashboard).
+# Stack locale : API de scoring + stockage des données de production (PostgreSQL) + pgAdmin.
+# Les services de monitoring (prometheus, grafana) et le dashboard sont ajoutés ensuite.
 name: pret-a-depenser
+
+x-postgres-env: &postgres-env
+  POSTGRES_USER: ${POSTGRES_USER:-scoring}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?définir POSTGRES_PASSWORD dans .env}
+  POSTGRES_DB: ${POSTGRES_DB:-scoring_prod}
 
 services:
   api:
@@ -11,15 +16,19 @@ services:
         INSTALL_EXTRAS: ${INSTALL_EXTRAS:-pyfunc}
     container_name: scoring-api
     env_file:
-      - path: .env
-        required: false
+      - .env
     environment:
       APP_ENV: prod
       LOG_FORMAT: json
       MODEL_BACKEND: ${MODEL_BACKEND:-pyfunc}
-      DB_ENABLED: ${DB_ENABLED:-false}
+      DB_ENABLED: ${DB_ENABLED:-true}
+      # Dans le réseau compose la base s'appelle « db » (le .env vise localhost:5433 pour l'hôte)
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scoring}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-scoring_prod}
     ports:
       - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health/ready"]
       interval: 10s
@@ -32,3 +41,38 @@ services:
         limits:
           cpus: "2"
           memory: 2g
+
+  db:
+    image: postgres:17-alpine
+    container_name: scoring-db
+    environment: *postgres-env
+    ports:
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scoring} -d ${POSTGRES_DB:-scoring_prod}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: scoring-pgadmin
+    profiles: ["tools"]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?définir PGADMIN_DEFAULT_PASSWORD dans .env}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - ./monitoring/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
