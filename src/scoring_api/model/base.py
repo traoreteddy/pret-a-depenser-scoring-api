@@ -31,6 +31,6 @@ class Predictor(Protocol):
     def predict_proba(self, x: NDArray[np.float64]) -> NDArray[np.float64]: ...
 
 
-def decide(proba: NDArray[np.float64], threshold: float) -> list[str]:
+def decide(proba: float, threshold: float) -> str:
     """Règle métier du P6 : refus si proba >= seuil."""
-    return [REFUSE if p >= threshold else ACCEPT for p in proba]
+    return REFUSE if proba >= threshold else ACCEPT
