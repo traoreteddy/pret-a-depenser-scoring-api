@@ -142,7 +142,7 @@ jobs:
           POSTGRES_DB=scoring_prod
           DATABASE_URL=postgresql://scoring:${{ secrets.POSTGRES_PASSWORD || 'ci_password' }}@db:5432/scoring_prod
           DB_ENABLED=${{ vars.DEPLOY_DB_ENABLED || 'false' }}
-          MODEL_BACKEND=${{ vars.MODEL_BACKEND || 'pyfunc' }}
+          MODEL_BACKEND=${{ vars.MODEL_BACKEND || 'xgb_native' }}
           EOT
       - name: Déploiement
         run: docker compose pull api && docker compose up -d --no-build

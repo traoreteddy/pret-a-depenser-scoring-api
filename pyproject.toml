@@ -16,7 +16,9 @@ dependencies = [
     "prometheus-client>=0.21",
     "psycopg[binary,pool]>=3.2",
     "numpy==2.5.3",
-    "xgboost==3.4.1",
+    # Linux (image Docker) : roue CPU seule ; la roue standard embarque les bibliothèques NVIDIA (~350 Mo).
+    "xgboost-cpu==3.4.1; sys_platform == 'linux'",
+    "xgboost==3.4.1; sys_platform != 'linux'",
     "pyyaml>=6.0.3",
 ]
 

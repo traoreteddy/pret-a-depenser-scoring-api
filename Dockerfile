@@ -10,8 +10,9 @@ ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     UV_PYTHON_DOWNLOADS=never
 
-# Extras à installer : "pyfunc" (baseline MLflow) ; vide pour une image allégée xgb_native
-ARG INSTALL_EXTRAS="pyfunc"
+# Extras à installer : vide = image allégée (backend natif xgb_native, défaut de production) ;
+# "pyfunc" = baseline MLflow ; "pyfunc onnx" = tous les backends (benchmarks)
+ARG INSTALL_EXTRAS=""
 
 WORKDIR /app
 COPY pyproject.toml uv.lock README.md ./
