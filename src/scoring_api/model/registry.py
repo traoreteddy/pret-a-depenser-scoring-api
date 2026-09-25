@@ -35,9 +35,14 @@ def load_predictor(settings: Settings) -> Predictor:
         from scoring_api.model.pyfunc_backend import PyfuncPredictor  # noqa: PLC0415
 
         return PyfuncPredictor(model_dir, settings.model_threshold)
-    if backend in {"xgb_native", "onnx"}:
-        msg = f"Backend {backend} : disponible après la phase d'optimisation (export_model.py)"
-        raise NotImplementedError(msg)
+    if backend == "xgb_native":
+        from scoring_api.model.xgb_backend import XgbNativePredictor  # noqa: PLC0415
+
+        return XgbNativePredictor(model_dir, settings.model_threshold, settings.xgb_nthread)
+    if backend == "onnx":
+        from scoring_api.model.onnx_backend import OnnxPredictor  # noqa: PLC0415
+
+        return OnnxPredictor(model_dir, settings.model_threshold, max(settings.xgb_nthread, 1))
     msg = f"Backend inconnu : {backend}"
     raise ValueError(msg)
 
