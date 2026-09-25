@@ -1,0 +1,36 @@
+# Environnements et secrets
+.venv/
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Profils, rapports générés et données brutes
+profiles/
+docs/reports/*.html
+data/*.csv
+data/raw/
+simulation/results/
+
+# Artefacts lourds du modèle non versionnés
+models/**/*.onnx.tmp
