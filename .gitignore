@@ -34,3 +34,6 @@ simulation/results/
 
 # Artefacts lourds du modèle non versionnés
 models/**/*.onnx.tmp
+
+# Mémo personnel (brief local)
+memo.txt*
