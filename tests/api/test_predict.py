@@ -5,6 +5,9 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
+from scoring_api.main import create_app
+from tests.conftest import make_settings
+
 
 def test_nominal(client: TestClient, payload: dict[str, object]) -> None:
     r = client.post("/predict", json=payload)
@@ -136,3 +139,9 @@ def test_unknown_route_json_error(client: TestClient) -> None:
     r = client.get("/nope")
     assert r.status_code == 404
     assert r.json()["error"] == "http_error"
+
+
+def test_threadpool_mode(payload: dict[str, object]) -> None:
+    with TestClient(create_app(make_settings(predict_in_threadpool=True))) as c:
+        r = c.post("/predict", json=payload)
+        assert r.status_code == 200 and r.json()["decision"] in {"Accordé", "Refusé"}

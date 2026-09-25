@@ -6,6 +6,7 @@ import time
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Request
+from starlette.concurrency import run_in_threadpool
 
 from scoring_api.api.deps import get_prediction_logger, get_predictor
 from scoring_api.api.errors import ModelInferenceError
@@ -34,14 +35,23 @@ router = APIRouter(tags=["scoring"])
         503: {"model": ErrorResponse, "description": "Modèle non chargé"},
     },
 )
-def predict(
+async def predict(
     payload: ClientInput,
     request: Request,
     predictor: Annotated[Predictor, Depends(get_predictor)],
     plogger: Annotated[Any, Depends(get_prediction_logger)],
 ) -> PredictionResponse:
-    # Endpoint synchrone : FastAPI l'exécute dans un pool de threads, l'inférence (CPU) ne bloque
-    # donc pas la boucle d'événements.
+    # Inférence native < 1 ms : l'exécution inline évite le passage par le pool de threads
+    # (et la contention du GIL sous forte concurrence). PREDICT_IN_THREADPOOL=true pour les
+    # backends lents (pyfunc) si l'on veut libérer la boucle d'événements.
+    if request.app.state.settings.predict_in_threadpool:
+        return await run_in_threadpool(_score, payload, request, predictor, plogger)
+    return _score(payload, request, predictor, plogger)
+
+
+def _score(
+    payload: ClientInput, request: Request, predictor: Predictor, plogger: Any
+) -> PredictionResponse:
     request_id = str(request.state.request_id)
     raw = payload.model_dump()
 

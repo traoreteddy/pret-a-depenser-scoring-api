@@ -27,9 +27,12 @@ class Settings(BaseSettings):
 
     # Modèle
     model_path: Path = Path("models/scoring_credit_v1")
-    model_backend: ModelBackend = "pyfunc"
+    model_backend: ModelBackend = "xgb_native"
     model_threshold: float | None = Field(default=None, ge=0.0, le=1.0)
     xgb_nthread: int = Field(default=1, ge=-1)
+    # True : /predict s'exécute dans le pool de threads (utile si l'inférence est longue) ;
+    # False : exécution inline dans la boucle d'événements (inférence < 1 ms, moins de surcoût).
+    predict_in_threadpool: bool = False
     warmup_rows: int = Field(default=10, ge=0)
 
     # Base de données
